@@ -1,11 +1,13 @@
-# API for SemanticKITTI
+# API for SemanticPOSS
 
 This repository contains helper scripts to open, visualize, process, and 
 evaluate results for point clouds and labels from the SemanticKITTI dataset.
 
+- Link to [SemanticPOSS dataset](http://www.poss.pku.edu.cn/semanticposs.html)
+- Link to original [SemanticKITTI API](https://github.com/PRBonn/semantic-kitti-api)
 - Link to original [KITTI Odometry Benchmark](http://www.cvlibs.net/datasets/kitti/eval_odometry.php) Dataset
-- Link to [SemanticKITTI dataset](http://semantic-kitti.org/).
-- Link to SemanticKITTI benchmark [competition](http://semantic-kitti.org/tasks.html).
+- Link to [SemanticKITTI dataset](http://semantic-kitti.org/)
+- Link to SemanticKITTI benchmark [competition](http://semantic-kitti.org/tasks.html)
 
 ---
 ##### Example of 3D pointcloud from sequence 13:
@@ -244,7 +246,13 @@ The data needs to be either:
   $ ./evaluate_panoptic.py --dataset /path/to/kitti/dataset/ --predictions /path/to/method_predictions --split train/valid/test # depending of desired split to evaluate
   ```
 
-  or for moving object segmentation
+  or 
+
+    ```sh
+  $ ./evaluate_4dpanoptic.py --dataset /path/to/kitti/dataset/ --predictions /path/to/method_predictions --split train/valid/test # depending of desired split to evaluate
+  ```
+
+  or 
 
     ```sh
   $ ./evaluate_mos.py --dataset /path/to/kitti/dataset/ --predictions /path/to/method_predictions --split train/valid/test # depending of desired split to evaluate
