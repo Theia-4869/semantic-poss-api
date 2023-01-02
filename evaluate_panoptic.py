@@ -45,7 +45,7 @@ if __name__ == '__main__':
       '-dc',
       type=str,
       required=False,
-      default="config/semantic-kitti.yaml",
+      default="config/semantic-poss.yaml",
       help='Dataset config file. Defaults to %(default)s',
   )
   parser.add_argument(
@@ -166,7 +166,7 @@ if __name__ == '__main__':
     label = np.fromfile(label_file, dtype=np.uint32)
 
     u_label_sem_class = class_lut[label & 0xFFFF]  # remap to xentropy format
-    u_label_inst = label # unique instance ids.
+    u_label_inst = label >> 16 # unique instance ids.
     if FLAGS.limit is not None:
       u_label_sem_class = u_label_sem_class[:FLAGS.limit]
       u_label_sem_cat = u_label_sem_cat[:FLAGS.limit]
@@ -175,7 +175,7 @@ if __name__ == '__main__':
     label = np.fromfile(pred_file, dtype=np.uint32)
 
     u_pred_sem_class = class_lut[label & 0xFFFF]  # remap to xentropy format
-    u_pred_inst = label # unique instance ids.
+    u_pred_inst = label >> 16 # unique instance ids.
     if FLAGS.limit is not None:
       u_pred_sem_class = u_pred_sem_class[:FLAGS.limit]
       u_pred_sem_cat = u_pred_sem_cat[:FLAGS.limit]
@@ -215,11 +215,13 @@ if __name__ == '__main__':
   # output_dict["raw"]["class_IoU"] = class_IoU
   # output_dict["raw"]["class_all_IoU"] = class_all_IoU
 
-  things = ['car', 'truck', 'bicycle', 'motorcycle', 'other-vehicle', 'person', 'bicyclist', 'motorcyclist']
-  stuff = [
-      'road', 'sidewalk', 'parking', 'other-ground', 'building', 'vegetation', 'trunk', 'terrain', 'fence', 'pole',
-      'traffic-sign'
-  ]
+  # things = ['car', 'truck', 'bicycle', 'motorcycle', 'other-vehicle', 'person', 'bicyclist', 'motorcyclist']
+  # stuff = [
+  #     'road', 'sidewalk', 'parking', 'other-ground', 'building', 'vegetation', 'trunk', 'terrain', 'fence', 'pole',
+  #     'traffic-sign'
+  # ]
+  things = ['1 person', 'rider', 'car']
+  stuff = ['trunk', 'plants', 'traffic sign 1', 'pole', 'trashcan', 'building', 'cone/stone', 'fence', 'bike', 'ground']
   all_classes = things + stuff
 
   # class
@@ -268,6 +270,7 @@ if __name__ == '__main__':
   codalab_output["sq_things"] = float(SQ_things)
 
   print("Completed in {} s".format(complete_time))
+  print(codalab_output)
 
   if FLAGS.output is not None:
     table = []

@@ -19,7 +19,7 @@ if __name__ == '__main__':
       '--config', '-c',
       type=str,
       required=False,
-      default="config/semantic-kitti.yaml",
+      default="config/semantic-poss.yaml",
       help='Dataset config file. Defaults to %(default)s',
   )
   parser.add_argument(

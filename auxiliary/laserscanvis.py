@@ -4,6 +4,7 @@
 import vispy
 from vispy.scene import visuals, SceneCanvas
 import numpy as np
+from PIL import Image
 from matplotlib import pyplot as plt
 from auxiliary.laserscan import LaserScan, SemLaserScan
 
@@ -35,7 +36,7 @@ class LaserScanVis:
     self.action = "no"  # no, next, back, quit are the possibilities
 
     # new canvas prepared for visualizing data
-    self.canvas = SceneCanvas(keys='interactive', show=True)
+    self.canvas = SceneCanvas(keys='interactive', show=True, bgcolor='white')
     # interface (n next, b back, q quit, very simple)
     self.canvas.events.key_press.connect(self.key_press)
     self.canvas.events.draw.connect(self.draw)
@@ -50,6 +51,7 @@ class LaserScanVis:
     self.scan_view.camera = 'turntable'
     self.scan_view.add(self.scan_vis)
     visuals.XYZAxis(parent=self.scan_view.scene)
+    
     # add semantics
     if self.semantics:
       print("Using semantics in visualizer")
@@ -62,6 +64,7 @@ class LaserScanVis:
       visuals.XYZAxis(parent=self.sem_view.scene)
       # self.sem_view.camera.link(self.scan_view.camera)
 
+    # add instances
     if self.instances:
       print("Using instances in visualizer")
       self.inst_view = vispy.scene.widgets.ViewBox(
@@ -83,7 +86,7 @@ class LaserScanVis:
       self.multiplier += 1
 
     # new canvas for img
-    self.img_canvas = SceneCanvas(keys='interactive', show=True,
+    self.img_canvas = SceneCanvas(keys='interactive', show=True, bgcolor='white', 
                                   size=(self.canvas_W, self.canvas_H * self.multiplier))
     # grid
     self.img_grid = self.img_canvas.central_widget.add_grid()
@@ -197,6 +200,15 @@ class LaserScanVis:
     self.img_canvas.events.key_press.block()
     if event.key == 'N':
       self.offset += 1
+      
+      # img_numpy = self.canvas.render()
+      # img = Image.fromarray(img_numpy)
+      # img.save("../demo/frames_pcd_white/scan_{:04}.png".format(self.offset))
+      
+      # img_numpy = self.img_canvas.render()
+      # img = Image.fromarray(img_numpy)
+      # img.save("../demo/frames_img/scan_{:04}.png".format(self.offset))
+      
       if self.offset >= self.total:
         self.offset = 0
       self.update_scan()

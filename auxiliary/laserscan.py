@@ -253,6 +253,12 @@ class SemLaserScan(LaserScan):
 
     # sanity check
     assert((self.sem_label + (self.inst_label << 16) == label).all())
+    
+    inst_label = np.zeros_like(self.inst_label)
+    inst_label[self.sem_label == 4] = self.inst_label[self.sem_label == 4]
+    inst_label[self.sem_label == 6] = self.inst_label[self.sem_label == 6]
+    inst_label[self.sem_label == 7] = self.inst_label[self.sem_label == 7]
+    self.inst_label = inst_label
 
     if self.project:
       self.do_label_projection()

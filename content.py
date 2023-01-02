@@ -102,7 +102,6 @@ if __name__ == '__main__':
 
     for idx in range(len(scan_names)):
       # open scan
-      print(label_names[idx])
       scan.open_scan(scan_names[idx])
       scan.open_label(label_names[idx])
       # make histogram and accumulate

@@ -1,0 +1,127 @@
+# This file is covered by the LICENSE file in the root of this project.
+name: "poss"
+labels: 
+  0 : "unlabeled"
+  4 : "1 person"
+  5 : "2+ person"
+  6 : "rider"
+  7 : "car"
+  8 : "trunk"
+  9 : "plants"
+  10: "traffic sign 1" # standing sign
+  11: "traffic sign 2" # hanging sign
+  12: "traffic sign 3" # high/big hanging sign
+  13: "pole"
+  14: "trashcan"
+  15: "building"
+  16: "cone/stone"
+  17: "fence"
+  18: "wrong label 1"
+  19: "wrong label 2"
+  20: "wrong label 3"
+  21: "bike"
+  22: "ground"
+color_map: # bgr
+  0 : [0, 0, 0]
+  4 : [30, 30, 255]
+  5 : [30, 30, 255]
+  6 : [200, 40, 255]
+  7 : [245, 150, 100]
+  8 : [0, 60, 135]
+  9 : [0, 175, 0]
+  10: [0, 0, 255]
+  11: [0, 0, 255]
+  12: [0, 0, 255]
+  13: [150, 240, 255]
+  14: [0, 255, 125]
+  15: [0, 200, 255]
+  16: [255, 255, 50]
+  17: [50, 120, 255]
+  18: [0, 0, 0]
+  19: [0, 0, 0]
+  20: [0, 0, 0]
+  21: [245, 230, 100]
+  22: [128, 128, 128]
+content: # as a ratio with the total number of points
+  0: 0.026570889627071242
+  4: 0.016349366088661322
+  5: 0.002952726098010657
+  6: 0.004652964421208443
+  7: 0.10630982023658261
+  8: 0.010176111805513983
+  9: 0.31078175950540227
+  10: 0.002693952721558824
+  11: 0.0008676700216223218
+  12: 0.001955108197674969
+  13: 0.0033654146566487113
+  14: 0.0004934105956558274
+  15: 0.2277405854162365
+  16: 0.0006655619855404156
+  17: 0.011678672021079467
+  18: 0.0007968904921786584
+  19: 6.766070089394267e-05
+  20: 0.0006733689894897167
+  21: 0.06499824436770603
+  22: 0.20620982205126406
+# classes that are indistinguishable from single scan or inconsistent in
+# ground truth are mapped to their closest equivalent
+learning_map:
+  0 : 0     # "unlabeled"
+  4 : 1     # "person"
+  5 : 1     # "2+ person" mapped to "person" ---------------------------mapped
+  6 : 2     # "rider"
+  7 : 3     # "car"
+  8 : 4     # "trunk"
+  9 : 5     # "plants"
+  10: 6     # "traffic sign"
+  11: 6     # "traffic sign 2" mapped to "traffic sign" ----------------mapped
+  12: 6     # "traffic sign 3" mapped to "traffic sign" ----------------mapped
+  13: 7     # "pole"
+  14: 8     # "trashcan"
+  15: 9     # "building"
+  16: 10    # "cone/stone"
+  17: 11    # "fence"
+  18: 0     # "wrong label 1" mapped to "unlabeled" --------------------mapped
+  19: 0     # "wrong label 2" mapped to "unlabeled" --------------------mapped
+  20: 0     # "wrong label 3" mapped to "unlabeled" --------------------mapped
+  21: 12    # "bike"
+  22: 13    # "ground"
+learning_map_inv: # inverse of previous map
+  0: 0      # "unlabeled", and others ignored
+  1: 4      # "person"
+  2: 6      # "rider"
+  3: 7      # "car"
+  4: 8      # "truck"
+  5: 9      # "plants"
+  6: 10     # "traffic sign"
+  7: 13     # "pole"
+  8: 14     # "trashcan"
+  9: 15     # "building"
+  10: 16    # "cone/stone"
+  11: 17    # "fence"
+  12: 21    # "bike"
+  13: 22    # "ground"
+learning_ignore: # Ignore classes
+  0: True      # "unlabeled", and others ignored
+  1: False     # "person"
+  2: False     # "rider"
+  3: False     # "car"
+  4: False     # "truck"
+  5: False     # "plants"
+  6: False     # "traffic sign"
+  7: False     # "pole"
+  8: False     # "trashcan"
+  9: False     # "building"
+  10: False    # "cone/stone"
+  11: False    # "fence"
+  12: False    # "bike"
+  13: False    # "ground"
+split: # sequence numbers
+  train:
+    - 1
+    - 4
+    - 5
+  valid:
+    - 0
+  test:
+    - 2
