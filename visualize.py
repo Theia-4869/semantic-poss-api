@@ -55,6 +55,13 @@ if __name__ == '__main__':
       help='Visualize instances too. Defaults to %(default)s',
   )
   parser.add_argument(
+      '--do_panoptics', '-dp',
+      dest='do_panoptics',
+      default=False,
+      action='store_true',
+      help='Visualize panoptics too. Defaults to %(default)s',
+  )
+  parser.add_argument(
       '--offset',
       type=int,
       default=0,
@@ -82,6 +89,7 @@ if __name__ == '__main__':
   print("Predictions", FLAGS.predictions)
   print("ignore_semantics", FLAGS.ignore_semantics)
   print("do_instances", FLAGS.do_instances)
+  print("do_panoptics", FLAGS.do_panoptics)
   print("ignore_safety", FLAGS.ignore_safety)
   print("offset", FLAGS.offset)
   print("*" * 80)
@@ -100,7 +108,7 @@ if __name__ == '__main__':
 
   # does sequence folder exist?
   scan_paths = os.path.join(FLAGS.dataset, "sequences",
-                            FLAGS.sequence, "velodyne")
+                            FLAGS.sequence, "scene", "velodyne")
   if os.path.isdir(scan_paths):
     print("Sequence folder exists! Using sequence from %s" % scan_paths)
   else:
@@ -119,7 +127,7 @@ if __name__ == '__main__':
                                  FLAGS.sequence, "predictions")
     else:
       label_paths = os.path.join(FLAGS.dataset, "sequences",
-                                 FLAGS.sequence, "labels")
+                                 FLAGS.sequence, "scene", "labels")
     if os.path.isdir(label_paths):
       print("Labels folder exists! Using labels from %s" % label_paths)
     else:
@@ -145,13 +153,16 @@ if __name__ == '__main__':
   # create a visualizer
   semantics = not FLAGS.ignore_semantics
   instances = FLAGS.do_instances
+  panoptics = FLAGS.do_panoptics
   if not semantics:
     label_names = None
   vis = LaserScanVis(scan=scan,
                      scan_names=scan_names,
                      label_names=label_names,
                      offset=FLAGS.offset,
-                     semantics=semantics, instances=instances and semantics)
+                     semantics=semantics,
+                     instances=instances and semantics,
+                     panoptics=panoptics and semantics and instances)
 
   # print instructions
   print("To navigate:")

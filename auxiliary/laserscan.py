@@ -185,12 +185,19 @@ class SemLaserScan(LaserScan):
       self.sem_color_lut[key] = np.array(value, np.float32) / 255.0
 
     # make instance colors
-    max_inst_id = 100000
-    self.inst_color_lut = np.random.uniform(low=0.0,
+    max_inst_id = 10000000
+    self.inst_color_lut = np.random.uniform(low=0.1,
                                             high=1.0,
                                             size=(max_inst_id, 3))
     # force zero to a gray-ish color
     self.inst_color_lut[0] = np.full((3), 0.1)
+    
+    # make panoptic colors
+    self.pan_color_lut = self.inst_color_lut.copy()
+    for key, value in sem_color_dict.items():
+      self.pan_color_lut[key] = np.array(value, np.float32) / 255.0
+    for id in range(101, 10000000):
+      self.pan_color_lut[id] = self.inst_color_lut[id // 100]
 
   def reset(self):
     """ Reset scan members. """
@@ -214,6 +221,12 @@ class SemLaserScan(LaserScan):
     self.proj_inst_label = np.zeros((self.proj_H, self.proj_W),
                                     dtype=np.int32)              # [H,W]  label
     self.proj_inst_color = np.zeros((self.proj_H, self.proj_W, 3),
+                                    dtype=np.float)              # [H,W,3] color
+    
+    # projection color with panoptic labels
+    self.proj_pan_label = np.zeros((self.proj_H, self.proj_W),
+                                    dtype=np.int32)              # [H,W]  label
+    self.proj_pan_color = np.zeros((self.proj_H, self.proj_W, 3),
                                     dtype=np.float)              # [H,W,3] color
 
   def open_label(self, filename):
@@ -259,6 +272,12 @@ class SemLaserScan(LaserScan):
     inst_label[self.sem_label == 6] = self.inst_label[self.sem_label == 6]
     inst_label[self.sem_label == 7] = self.inst_label[self.sem_label == 7]
     self.inst_label = inst_label
+    
+    pan_label = self.sem_label.copy()
+    pan_label[self.sem_label == 4] = self.inst_label[self.sem_label == 4] * 100 + 4
+    pan_label[self.sem_label == 6] = self.inst_label[self.sem_label == 6] * 100 + 6
+    pan_label[self.sem_label == 7] = self.inst_label[self.sem_label == 7] * 100 + 7
+    self.pan_label = pan_label
 
     if self.project:
       self.do_label_projection()
@@ -271,6 +290,9 @@ class SemLaserScan(LaserScan):
 
     self.inst_label_color = self.inst_color_lut[self.inst_label]
     self.inst_label_color = self.inst_label_color.reshape((-1, 3))
+    
+    self.pan_label_color = self.pan_color_lut[self.pan_label]
+    self.pan_label_color = self.pan_label_color.reshape((-1, 3))
 
   def do_label_projection(self):
     # only map colors to labels that exist
@@ -283,3 +305,7 @@ class SemLaserScan(LaserScan):
     # instances
     self.proj_inst_label[mask] = self.inst_label[self.proj_idx[mask]]
     self.proj_inst_color[mask] = self.inst_color_lut[self.inst_label[self.proj_idx[mask]]]
+    
+    # panoptic
+    self.proj_pan_label[mask] = self.pan_label[self.proj_idx[mask]]
+    self.proj_pan_color[mask] = self.pan_color_lut[self.pan_label[self.proj_idx[mask]]]
