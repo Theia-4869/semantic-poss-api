@@ -48,36 +48,36 @@ class LaserScanVis:
     self.grid = self.canvas.central_widget.add_grid()
 
     # laserscan part
-    # self.scan_view = vispy.scene.widgets.ViewBox(
-    #     border_color='white', parent=self.canvas.scene)
-    # self.grid.add_widget(self.scan_view, 0, 0)
-    # self.scan_vis = visuals.Markers()
-    # self.scan_view.camera = 'turntable' # 'arcball', 'base', 'fly', 'magnify', 'perspective', 'panzoom', 'turntable'
-    # self.scan_view.add(self.scan_vis)
-    # visuals.XYZAxis(parent=self.scan_view.scene)
+    self.scan_view = vispy.scene.widgets.ViewBox(
+        border_color='white', parent=self.canvas.scene)
+    self.grid.add_widget(self.scan_view, 0, 0)
+    self.scan_vis = visuals.Markers()
+    self.scan_view.camera = 'turntable' # 'arcball', 'base', 'fly', 'magnify', 'perspective', 'panzoom', 'turntable'
+    self.scan_view.add(self.scan_vis)
+    visuals.XYZAxis(parent=self.scan_view.scene)
     
     # # add semantics
-    # if self.semantics:
-    #   print("Using semantics in visualizer")
-    #   self.sem_view = vispy.scene.widgets.ViewBox(
-    #       border_color='white', parent=self.canvas.scene)
-    #   self.grid.add_widget(self.sem_view, 0, 1)
-    #   self.sem_vis = visuals.Markers()
-    #   self.sem_view.camera = 'turntable'
-    #   self.sem_view.add(self.sem_vis)
-    #   visuals.XYZAxis(parent=self.sem_view.scene)
+    if self.semantics:
+      print("Using semantics in visualizer")
+      self.sem_view = vispy.scene.widgets.ViewBox(
+          border_color='white', parent=self.canvas.scene)
+      self.grid.add_widget(self.sem_view, 0, 1)
+      self.sem_vis = visuals.Markers()
+      self.sem_view.camera = 'turntable'
+      self.sem_view.add(self.sem_vis)
+      visuals.XYZAxis(parent=self.sem_view.scene)
       # self.sem_view.camera.link(self.scan_view.camera)
 
     # add instances
-    # if self.instances:
-    #   print("Using instances in visualizer")
-    #   self.inst_view = vispy.scene.widgets.ViewBox(
-    #       border_color='white', parent=self.canvas.scene)
-    #   self.grid.add_widget(self.inst_view, 0, 2)
-    #   self.inst_vis = visuals.Markers()
-    #   self.inst_view.camera = 'turntable'
-    #   self.inst_view.add(self.inst_vis)
-    #   visuals.XYZAxis(parent=self.inst_view.scene)
+    if self.instances:
+      print("Using instances in visualizer")
+      self.inst_view = vispy.scene.widgets.ViewBox(
+          border_color='white', parent=self.canvas.scene)
+      self.grid.add_widget(self.inst_view, 0, 2)
+      self.inst_vis = visuals.Markers()
+      self.inst_view.camera = 'turntable'
+      self.inst_view.add(self.inst_vis)
+      visuals.XYZAxis(parent=self.inst_view.scene)
       # self.inst_view.camera.link(self.scan_view.camera)
     
     # add panoptics
@@ -85,9 +85,9 @@ class LaserScanVis:
       print("Using panoptics in visualizer")
       self.pan_view = vispy.scene.widgets.ViewBox(
           border_color='white', parent=self.canvas.scene)
-      self.grid.add_widget(self.pan_view, 0, 0)
+      self.grid.add_widget(self.pan_view, 0, 3)
       self.pan_vis = visuals.Markers()
-      self.pan_view.camera = 'fly'
+      self.pan_view.camera = 'turntable'
       self.pan_view.add(self.pan_vis)
       visuals.XYZAxis(parent=self.pan_view.scene)
       # self.pan_view.camera.link(self.scan_view.camera)
@@ -169,33 +169,33 @@ class LaserScanVis:
     # plot scan
     power = 16
     # print()
-    # range_data = np.copy(self.scan.unproj_range)
-    # # print(range_data.max(), range_data.min())
-    # range_data = range_data**(1 / power)
-    # # print(range_data.max(), range_data.min())
-    # viridis_range = ((range_data - range_data.min()) /
-    #                  (range_data.max() - range_data.min()) *
-    #                  255).astype(np.uint8)
-    # viridis_map = self.get_mpl_colormap("viridis")
-    # viridis_colors = viridis_map[viridis_range]
-    # self.scan_vis.set_data(self.scan.points,
-    #                        face_color=viridis_colors[..., ::-1],
-    #                        edge_color=viridis_colors[..., ::-1],
-    #                        size=1)
+    range_data = np.copy(self.scan.unproj_range)
+    # print(range_data.max(), range_data.min())
+    range_data = range_data**(1 / power)
+    # print(range_data.max(), range_data.min())
+    viridis_range = ((range_data - range_data.min()) /
+                     (range_data.max() - range_data.min()) *
+                     255).astype(np.uint8)
+    viridis_map = self.get_mpl_colormap("viridis")
+    viridis_colors = viridis_map[viridis_range]
+    self.scan_vis.set_data(self.scan.points,
+                           face_color=viridis_colors[..., ::-1],
+                           edge_color=viridis_colors[..., ::-1],
+                           size=1)
 
     # # plot semantics
-    # if self.semantics:
-    #   self.sem_vis.set_data(self.scan.points,
-    #                         face_color=self.scan.sem_label_color[..., ::-1],
-    #                         edge_color=self.scan.sem_label_color[..., ::-1],
-    #                         size=1)
+    if self.semantics:
+      self.sem_vis.set_data(self.scan.points,
+                            face_color=self.scan.sem_label_color[..., ::-1],
+                            edge_color=self.scan.sem_label_color[..., ::-1],
+                            size=1)
 
     # plot instances
-    # if self.instances:
-    #   self.inst_vis.set_data(self.scan.points,
-    #                          face_color=self.scan.inst_label_color[..., ::-1],
-    #                          edge_color=self.scan.inst_label_color[..., ::-1],
-    #                          size=1)
+    if self.instances:
+      self.inst_vis.set_data(self.scan.points,
+                             face_color=self.scan.inst_label_color[..., ::-1],
+                             edge_color=self.scan.inst_label_color[..., ::-1],
+                             size=1)
 
     # plot panoptic
     if self.panoptics:

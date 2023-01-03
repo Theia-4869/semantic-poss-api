@@ -108,7 +108,7 @@ if __name__ == '__main__':
 
   # does sequence folder exist?
   scan_paths = os.path.join(FLAGS.dataset, "sequences",
-                            FLAGS.sequence, "scene", "velodyne")
+                            FLAGS.sequence, "velodyne")
   if os.path.isdir(scan_paths):
     print("Sequence folder exists! Using sequence from %s" % scan_paths)
   else:
@@ -127,7 +127,7 @@ if __name__ == '__main__':
                                  FLAGS.sequence, "predictions")
     else:
       label_paths = os.path.join(FLAGS.dataset, "sequences",
-                                 FLAGS.sequence, "scene", "labels")
+                                 FLAGS.sequence, "labels")
     if os.path.isdir(label_paths):
       print("Labels folder exists! Using labels from %s" % label_paths)
     else:
