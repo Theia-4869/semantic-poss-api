@@ -98,7 +98,7 @@ labels_all = []
 l = len(os.listdir(bin_path))
 
 for timestep in range(l):
-    if timestep % 5 != 1:
+    if timestep % 16 != 4:
         continue
     old_path = os.path.join(bin_path, "%06d.bin" % (timestep))
     points = read_points(os.path.join(bin_path, "%06d.bin" % (timestep)))
@@ -124,11 +124,11 @@ for timestep in range(l):
     
 new_points_all = np.vstack(new_points_all)
 print(new_points_all.shape)
-new_path2 = os.path.join(scene_bin_path, "000000.bin")
+new_path2 = os.path.join(scene_bin_path, "000001.bin")
 new_points_all.tofile(new_path2)
 
 labels_all = np.vstack(labels_all)
 print(labels_all.shape)
 labels_all = labels_all.reshape(-1)
-scene_label_path = os.path.join(scene_label_path, "000000.label")
+scene_label_path = os.path.join(scene_label_path, "000001.label")
 labels_all.tofile(scene_label_path)

@@ -1,7 +1,6 @@
 # API for SemanticPOSS
 
-This repository contains helper scripts to open, visualize, process, and 
-evaluate results for point clouds and labels from the SemanticKITTI dataset.
+This repository contains helper scripts to open, visualize, process, and evaluate results for point clouds and labels from the SemanticKITTI/SemanticPOSS dataset.
 
 - Link to [SemanticPOSS dataset](http://www.poss.pku.edu.cn/semanticposs.html)
 - Link to original [SemanticKITTI API](https://github.com/PRBonn/semantic-kitti-api)
@@ -150,6 +149,25 @@ visualization of the labels with the visualization of your predictions:
 
 ```sh
 $ ./visualize.py --sequence 00 --dataset /path/to/kitti/dataset/ --predictions /path/to/your/predictions
+```
+
+In addition, you can use the options below to choose between different tasks:
+- (default): Semantic results,
+- `-i`: only Point Cloud,
+- `-di` additional Instance results,
+- `-dp` additional Panoptic results.
+
+
+For example:
+
+```sh
+./visualize.py --sequence 02 --dataset /path/to/kitti/dataset/ --predictions /path/to/your/predictions -di -dp
+```
+
+To visualize the results in a whole scene, use the `generate_scene.py` script. It will merge the pointsin the whole sequence to one .pcd file and generate the corresponding labels.
+
+```sh
+$ ./generate_scene.py
 ```
 
 #### Voxel Grids for Semantic Scene Completion

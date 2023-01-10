@@ -56,7 +56,7 @@ class LaserScanVis:
     self.scan_view.add(self.scan_vis)
     visuals.XYZAxis(parent=self.scan_view.scene)
     
-    # # add semantics
+    # add semantics
     if self.semantics:
       print("Using semantics in visualizer")
       self.sem_view = vispy.scene.widgets.ViewBox(
@@ -183,7 +183,7 @@ class LaserScanVis:
                            edge_color=viridis_colors[..., ::-1],
                            size=1)
 
-    # # plot semantics
+    # plot semantics
     if self.semantics:
       self.sem_vis.set_data(self.scan.points,
                             face_color=self.scan.sem_label_color[..., ::-1],
