@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 # This file is covered by the LICENSE file in the root of this project.
 # developed by Shiji Xin
+'''
+2022/01
+convert_points_pos.py
+利用位姿转换点云到全局坐标系, 从而生成全局地图
+'''
+
 
 import numpy as np
 import cv2 as cv
@@ -69,28 +75,14 @@ def parse_poses(filename, calibration):
     return poses
 
 
-basepath = 'D:\\课程PPT\\智能机器人概论\\作业\\Final\\dataset\\sequences'
+basepath = 'E:\\robot\\4D-PLS-POSS\\data\\SemanticPoss\\sequences'
 bin_path = basepath + '\\02\\velodyne\\'
-scene_bin_path = basepath + '\\02\\scene\\velodyne\\'
-label_path = basepath + '\\02\\labels\\'
-scene_label_path = basepath + '\\02\\scene\\labels\\'
+bin_path_new = basepath + '\\02\\velodyne_new\\'
+bin_path_new2 = basepath + '\\02\\velodyne_all\\'
+label_path = 'E:\\robot\\finetune_importance_None_str1_bigpug_4\\stitch4\\sequences\\02\\predictions'
+label_path_new = basepath + '\\02\\labels_all\\'
 calib_path = basepath + '\\02\\calib.txt'
 pose_path = basepath + '\\02\\poses.txt'
-# timestep = 2
-
-# points = read_points(os.path.join(bin_path, "%06d.bin" % (timestep)))
-# calib = parse_calibration(calib_path)
-
-# b_o = parse_poses(pose_path, calib)
-# b = []
-# b = [pose.astype(np.float32) for pose in b_o]
-# poses = np.stack(b)
-
-# pose = poses[timestep]
-# hpoints = np.hstack(
-#     (points[:, :3], np.ones_like(points[:, :1])))
-# new_points = np.sum(np.expand_dims(
-#     hpoints, 2) * pose.T, axis=1)
 
 new_points_all = []
 labels_all = []
@@ -98,37 +90,32 @@ labels_all = []
 l = len(os.listdir(bin_path))
 
 for timestep in range(l):
-    if timestep % 16 != 4:
+    if timestep % 20 != 1:
         continue
     old_path = os.path.join(bin_path, "%06d.bin" % (timestep))
     points = read_points(os.path.join(bin_path, "%06d.bin" % (timestep)))
     calib = parse_calibration(calib_path)
-
     b_o = parse_poses(pose_path, calib)
     b = []
     b = [pose.astype(np.float32) for pose in b_o]
     poses = np.stack(b)
-
     pose = poses[timestep]
     hpoints = np.hstack(
         (points[:, :3], np.ones_like(points[:, :1])))
     new_points = np.sum(np.expand_dims(
         hpoints, 2) * pose.T, axis=1)
-    # new_path = os.path.join(scene_bin_path, "%06d.bin" % (timestep))
-    # new_points.tofile(new_path)
     new_points_all.append(new_points)
-
     old_path_label = os.path.join(label_path, "%06d.label" % (timestep))
-    labels = np.fromfile(old_path_label, dtype=np.uint32).reshape((-1, 1))
+    labels = np.fromfile(old_path_label, dtype=np.uint32).reshape(-1, 1)
     labels_all.append(labels)
-    
 new_points_all = np.vstack(new_points_all)
+
 print(new_points_all.shape)
-new_path2 = os.path.join(scene_bin_path, "000001.bin")
+new_path2 = os.path.join(bin_path_new2, "000000.bin")
 new_points_all.tofile(new_path2)
 
 labels_all = np.vstack(labels_all)
-print(labels_all.shape)
 labels_all = labels_all.reshape(-1)
-scene_label_path = os.path.join(scene_label_path, "000001.label")
-labels_all.tofile(scene_label_path)
+print(labels_all.shape)
+label_path_new = os.path.join(label_path_new, "000000.label")
+labels_all.tofile(label_path_new)

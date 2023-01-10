@@ -164,10 +164,10 @@ For example:
 ./visualize.py --sequence 02 --dataset /path/to/kitti/dataset/ --predictions /path/to/your/predictions -di -dp
 ```
 
-To visualize the results in a whole scene, use the `generate_scene.py` script. It will merge the pointsin the whole sequence to one .pcd file and generate the corresponding labels.
+To visualize the results in a whole scene, use the `convert_points_pos.py` script. It will merge the pointsin the whole sequence to one .pcd file and generate the corresponding labels.
 
 ```sh
-$ ./generate_scene.py
+$ ./convert_points_pos.py
 ```
 
 #### Voxel Grids for Semantic Scene Completion
